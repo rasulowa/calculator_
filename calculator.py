@@ -53,8 +53,8 @@ def function(calc):
     calc = calc.replace('умножить на', '*')
     calc = calc.replace('скобка открывается', '(')
     calc = calc.replace('скобка закрывается', ')')
-    for indx, num in enumerate(reversed(units[0:100])):   # Замена единиц на числа
-        calc = calc.replace(num, str(numbers[100 - indx - 1]))    
+    for index, num in enumerate(reversed(units[0:100])):   # Замена единиц на числа
+        calc = calc.replace(num, str(numbers[100 - index - 1]))    
     try:   # Обработка вычислений
         result = eval(calc)
     except SyntaxError:
