@@ -64,9 +64,7 @@ def function(calc):
     
     if result != None:    # Дополнительные проверки ввода
         calc = calc.replace(' ', '')
-        if ('**' in calc or '++' in calc or calc[0] == '+' or '++' in calc or
-            '---' in calc or '-+' in calc or '+--' in calc or '*--' in calc or
-            calc.find('--') == 0):
+        if ('*-' in calc or '+*' in calc or '+--' in calc or '*--' in calc ):
             print('Ошибка ввода')
             return True
         else:
