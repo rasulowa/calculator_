@@ -1,93 +1,81 @@
-text_to_number = {
-    "ноль": 0,"один": 1,"два": 2,"три": 3,"четыре": 4,"пять": 5,"шесть": 6,"семь": 7,"восемь": 8,"девять": 9,"десять": 10,
-    "одиннадцать": 11,"двенадцать": 12,"тринадцать": 13,"четырнадцать": 14,"пятнадцать": 15,"шестнадцать": 16,"семнадцать": 17,"восемнадцать": 18,"девятнадцать": 19,"двадцать": 20,
-    "тридцать": 30,"сорок": 40,"пятьдесят": 50,"шестьдесят": 60,"семьдесят": 70,"восемьдесят": 80,"девяносто": 90,"сто": 100
-}
+def function(calc):
+    # Функция, принимающая строку от пользователя и возвращающая строку
 
-operations = {
-    "плюс": "+",
-    "минус": "-",
-    "умножить": "*",
-    "разделить": "//",
-    "минус(минус)": "+"
-}
+    result = None
 
-def main():
-    # Запрашивает у пользователя математические выражения, записанные словами.
-    # Программа запрашивает математические выражения, пока пользователь на введёт "выход"
+    units = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть',
+            'семь', 'восемь', 'девять', 'десять', 'одиннадцать',
+            'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать',
+            'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать']   # Список, содержащий текстовые представления чисел от 0 до 19.
 
-    print(
-        """Введите "число <операция> число" в словесной форме. 
-Например, двадцать пять плюс тринадцать один."""
-    )
+    tens = ['двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят',
+            'семьдесят', 'восемьдесят', 'девяносто']    # Список, содержащий текстовые представления десятков от 20 до 90
 
-    while True:
-        string = input("Выражение: ").lower().strip()
-        if string == "выход":
-            break
+    hundreds = ['сто', 'двести', 'триста', 'четыреста', 'пятьсот',
+                'шестьсот', 'семьсот', 'восемьсот', 'девятьсот']   # Список, содержащий текстовые представления сотен от 100 до 900.
 
-        try:
-            print(translate_number(eval(translate_words(string))))
-        except ValueError as err1:
-            print(err1)
-        except TypeError:
-            print("Неправильная запись операций!")
-        except:
-            pass
+    thousands = ['тысяча', 'две тысячи', 'три тысячи', 'четыре тысячи',
+                'пять тысяч', 'шесть тысяч', 'семь тысяч', 'восемь тысяч',
+                'девять тысяч']   # Список, содержащий текстовые представления тысяч от 1000 до 9000.
 
+    numbers = []
 
-def translate_words(string):
-    # Переводит выражение, записанное словами, в математическую форму
+    for ten in tens:   # Создание чисел от 21 до 99
+        for num in [''] + units[1:10]:
+            if num != '':
+                units.append(ten + ' ' + num)
+            else:
+                units.append(ten + num)
 
-    words = string.split()
-    expression = []
-    num = None
+    for hundred in hundreds:   # Создание чисел от 100 до 999
+        for ten in [''] + units[1:100]:
+            if ten != '':
+                units.append(hundred + ' ' + ten)
+            else:
+                units.append(hundred + ten)
 
-    for word in words:
-        if word in text_to_number:
-            num = text_to_number[word] if num == None else num + text_to_number[word]
-        elif word in operations and check_num(num):
-            expression.extend([str(num), operations[word]])
-            num = None
-        else:
-            raise ValueError(f'Незнакомое слово "{word}"!')
+    for thousand in thousands:   # Создание чисел от 1000 и выше
+        for hundred in [''] + units[1:1000]:
+            if hundred != '':
+                units.append(thousand + ' ' + hundred)
+            else:
+                units.append(thousand + hundred)
 
-    if check_num(num):
-        expression.append(str(num))
+    for num in range(0, 10000):  #  Генерация чисел от 0 до 9999
+        numbers.append(num)
 
-    return " ".join(expression)
-
-
-def check_num(num):
-    if (0 <= num <= 100) == False:
-        raise ValueError("Все числа должны быть от 0 до 100!")
-    return True
-
-
-def translate_number(num):
-    # Переводит число в словесную форму
-
-    result = []
-    if num < 0:
-        result.append("минус")
-        num = -num
-
-    units = ["", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "одиннадцать",
-            "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"]
-    tens = ['', '', "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"]
-    hundreds = ['', "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот"]
+    if '  ' in calc or calc[0] == ' ' or calc[-1] == ' ':  # Проверка ошибок ввода
+        print('Ошибка ввода')
+        return True 
+        # Замена текстовых команд на математические операции
+    calc = calc.replace('минус', '-')
+    calc = calc.replace('плюс', '+')
+    calc = calc.replace('умножить на', '*')
+    calc = calc.replace('скобка открывается', '(')
+    calc = calc.replace('скобка закрывается', ')')
+    for indx, num in enumerate(reversed(units[0:100])):   # Замена единиц на числа
+        calc = calc.replace(num, str(numbers[100 - indx - 1]))    
+    try:   # Обработка вычислений
+        result = eval(calc)
+    except SyntaxError:
+        print('Ошибка ввода')
+    except NameError:
+        print('Ошибка ввода')
     
-    result.append(hundreds[num // 100 % 10])
-    if 10 <= (num % 100) <= 19:
-        result.append(units[num % 100])
-    else:
-        result.append(tens[num // 10 % 10])
-        result.append(units[num % 10])
+    if result != None:    # Дополнительные проверки ввода
+        calc = calc.replace(' ', '')
+        if ('**' in calc or '++' in calc or calc[0] == '+' or '++' in calc or
+            '---' in calc or '-+' in calc or '+--' in calc or '*--' in calc or
+            calc.find('--') == 0):
+            print('Ошибка ввода')
+            return True
+        else:
+            try:
+                print(units[numbers.index(result)])
+            except ValueError:
+                print('Ошибка ввода')
 
-    result = list(filter(None, result))
-    if len(result) == 0:
-        return 'ноль'
-    else:
-        return " ".join(result)
+print("""Введите "число <операция> число" в словесной форме. 
+Например, двадцать пять плюс тринадцать один.""")
 
-main()
+function(input('Введите выражение: '))
